@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,7 +17,10 @@ import {
   ChevronRight,
   ChevronDown,
   Folder,
-  FolderOpen
+  FolderOpen,
+  Edit2,
+  Check,
+  X
 } from 'lucide-react';
 
 interface TechFrameworkProps {
@@ -37,6 +39,11 @@ interface ClassificationItem {
   patentCount: number;
 }
 
+interface AxisNames {
+  axis1: string;
+  axis2: string;
+}
+
 export const TechFramework: React.FC<TechFrameworkProps> = ({ projectId, customerId }) => {
   const [selectedAxis, setSelectedAxis] = useState<1 | 2>(1);
   const [selectedItem, setSelectedItem] = useState<ClassificationItem | null>(null);
@@ -48,6 +55,14 @@ export const TechFramework: React.FC<TechFrameworkProps> = ({ projectId, custome
     parentId: '',
     level: 'major' as 'major' | 'minor'
   });
+
+  // 축 명칭 관리 상태
+  const [axisNames, setAxisNames] = useState<AxisNames>({
+    axis1: '기술 분류',
+    axis2: '구현 분류'
+  });
+  const [editingAxis, setEditingAxis] = useState<1 | 2 | null>(null);
+  const [tempAxisName, setTempAxisName] = useState('');
 
   // Mock classification data
   const classifications: ClassificationItem[] = [
@@ -83,6 +98,28 @@ export const TechFramework: React.FC<TechFrameworkProps> = ({ projectId, custome
     { id: '23', code: '2CB', name: '통합', description: '시스템 통합', axis: 2, parentId: '21', level: 'minor', patentCount: 28 },
     { id: '24', code: '2CC', name: '최적화', description: '시스템 최적화', axis: 2, parentId: '21', level: 'minor', patentCount: 14 }
   ];
+
+  // 축 명칭 편집 핸들러
+  const handleAxisNameEdit = (axis: 1 | 2) => {
+    setEditingAxis(axis);
+    setTempAxisName(axis === 1 ? axisNames.axis1 : axisNames.axis2);
+  };
+
+  const handleAxisNameSave = () => {
+    if (editingAxis && tempAxisName.trim()) {
+      setAxisNames(prev => ({
+        ...prev,
+        [`axis${editingAxis}`]: tempAxisName.trim()
+      }));
+    }
+    setEditingAxis(null);
+    setTempAxisName('');
+  };
+
+  const handleAxisNameCancel = () => {
+    setEditingAxis(null);
+    setTempAxisName('');
+  };
 
   const getFilteredClassifications = (axis: 1 | 2) => {
     return classifications.filter(item => item.axis === axis);
@@ -201,8 +238,8 @@ export const TechFramework: React.FC<TechFrameworkProps> = ({ projectId, custome
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="1">1축 (기술 분야)</SelectItem>
-                      <SelectItem value="2">2축 (구현 방식)</SelectItem>
+                      <SelectItem value="1">1축 ({axisNames.axis1})</SelectItem>
+                      <SelectItem value="2">2축 ({axisNames.axis2})</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -292,17 +329,50 @@ export const TechFramework: React.FC<TechFrameworkProps> = ({ projectId, custome
       {/* 분류 관리 탭 */}
       <Tabs defaultValue="axis1" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="axis1">1축 기술 분류</TabsTrigger>
-          <TabsTrigger value="axis2">2축 구현 분류</TabsTrigger>
+          <TabsTrigger value="axis1">1축 {axisNames.axis1}</TabsTrigger>
+          <TabsTrigger value="axis2">2축 {axisNames.axis2}</TabsTrigger>
           <TabsTrigger value="matrix">분류 매트릭스</TabsTrigger>
         </TabsList>
 
         <TabsContent value="axis1" className="mt-6">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Grid3X3 className="h-5 w-5" />
-                <span>1축 기술 분류 (기술 분야)</span>
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Grid3X3 className="h-5 w-5" />
+                  {editingAxis === 1 ? (
+                    <div className="flex items-center space-x-2">
+                      <Input
+                        value={tempAxisName}
+                        onChange={(e) => setTempAxisName(e.target.value)}
+                        className="h-8 text-lg font-semibold"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleAxisNameSave();
+                          if (e.key === 'Escape') handleAxisNameCancel();
+                        }}
+                        autoFocus
+                      />
+                      <Button size="sm" variant="ghost" onClick={handleAxisNameSave}>
+                        <Check className="h-4 w-4 text-green-600" />
+                      </Button>
+                      <Button size="sm" variant="ghost" onClick={handleAxisNameCancel}>
+                        <X className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <span>1축 {axisNames.axis1}</span>
+                      <Button 
+                        size="sm" 
+                        variant="ghost"
+                        onClick={() => handleAxisNameEdit(1)}
+                        className="p-1 h-6 w-6"
+                      >
+                        <Edit2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -314,9 +384,42 @@ export const TechFramework: React.FC<TechFrameworkProps> = ({ projectId, custome
         <TabsContent value="axis2" className="mt-6">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Grid3X3 className="h-5 w-5" />
-                <span>2축 구현 분류 (구현 방식)</span>
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Grid3X3 className="h-5 w-5" />
+                  {editingAxis === 2 ? (
+                    <div className="flex items-center space-x-2">
+                      <Input
+                        value={tempAxisName}
+                        onChange={(e) => setTempAxisName(e.target.value)}
+                        className="h-8 text-lg font-semibold"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleAxisNameSave();
+                          if (e.key === 'Escape') handleAxisNameCancel();
+                        }}
+                        autoFocus
+                      />
+                      <Button size="sm" variant="ghost" onClick={handleAxisNameSave}>
+                        <Check className="h-4 w-4 text-green-600" />
+                      </Button>
+                      <Button size="sm" variant="ghost" onClick={handleAxisNameCancel}>
+                        <X className="h-4 w-4 text-red-600" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <span>2축 {axisNames.axis2}</span>
+                      <Button 
+                        size="sm" 
+                        variant="ghost"
+                        onClick={() => handleAxisNameEdit(2)}
+                        className="p-1 h-6 w-6"
+                      >
+                        <Edit2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -334,7 +437,7 @@ export const TechFramework: React.FC<TechFrameworkProps> = ({ projectId, custome
               <div className="text-center py-8 text-gray-500">
                 <Grid3X3 className="h-12 w-12 mx-auto mb-4 text-gray-400" />
                 <p>분류 조합별 특허 분포를 시각화하는 매트릭스가 여기에 표시됩니다.</p>
-                <p className="text-sm mt-2">1축 × 2축 조합으로 구성된 히트맵 형태로 제공됩니다.</p>
+                <p className="text-sm mt-2">{axisNames.axis1} × {axisNames.axis2} 조합으로 구성된 히트맵 형태로 제공됩니다.</p>
               </div>
             </CardContent>
           </Card>
