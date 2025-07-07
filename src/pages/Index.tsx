@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { 
   Building2, 
   FileText, 
-  Target, 
+  Shield, 
   TrendingUp, 
   Grid3X3, 
   Plus,
@@ -17,7 +17,7 @@ import {
   BarChart3
 } from 'lucide-react';
 import { ApplicationProject } from '@/components/ApplicationProject';
-import { CompetitorAnalysis } from '@/components/CompetitorAnalysis';
+import { ValidPatentAnalysis } from '@/components/ValidPatentAnalysis';
 import { IPPortfolio } from '@/components/IPPortfolio';
 import { TechFramework } from '@/components/TechFramework';
 import { ProjectOverview } from '@/components/ProjectOverview';
@@ -39,7 +39,7 @@ const Index = () => {
       id: 'project-1', 
       name: '반도체 IP 관리', 
       customer: 'customer-1',
-      features: ['application', 'competitor', 'portfolio', 'framework'],
+      features: ['application', 'valid-patent', 'portfolio', 'framework'],
       status: 'active'
     },
     { 
@@ -135,10 +135,10 @@ const Index = () => {
                   </TabsTrigger>
                 )}
                 
-                {currentProject.features.includes('competitor') && (
-                  <TabsTrigger value="competitor" className="flex items-center space-x-2">
-                    <Target className="h-4 w-4" />
-                    <span>경쟁사 분석</span>
+                {currentProject.features.includes('valid-patent') && (
+                  <TabsTrigger value="valid-patent" className="flex items-center space-x-2">
+                    <Shield className="h-4 w-4" />
+                    <span>유효특허 분석</span>
                   </TabsTrigger>
                 )}
                 
@@ -173,9 +173,9 @@ const Index = () => {
                 </TabsContent>
               )}
 
-              {currentProject.features.includes('competitor') && (
-                <TabsContent value="competitor" className="mt-6">
-                  <CompetitorAnalysis 
+              {currentProject.features.includes('valid-patent') && (
+                <TabsContent value="valid-patent" className="mt-6">
+                  <ValidPatentAnalysis 
                     projectId={selectedProject}
                     customerId={selectedCustomer}
                   />
