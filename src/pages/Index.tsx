@@ -1,26 +1,7 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Building2, 
-  FileText, 
-  Shield, 
-  TrendingUp, 
-  Grid3X3, 
-  Plus,
-  Search,
-  Filter,
-  BarChart3
-} from 'lucide-react';
-import { ApplicationProject } from '@/components/ApplicationProject';
-import { ValidPatentAnalysis } from '@/components/ValidPatentAnalysis';
-import { IPPortfolio } from '@/components/IPPortfolio';
-import { TechFramework } from '@/components/TechFramework';
-import { ProjectOverview } from '@/components/ProjectOverview';
+import { AppHeader } from '@/components/AppHeader';
+import { ProjectTabs } from '@/components/ProjectTabs';
 
 const Index = () => {
   const [selectedCustomer, setSelectedCustomer] = useState('customer-1');
@@ -55,152 +36,25 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <div className="bg-white border-b border-slate-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <Building2 className="h-8 w-8 text-blue-600" />
-                <span className="text-xl font-bold text-slate-900">Lovable AI</span>
-                <Badge variant="secondary" className="text-xs">IP Management</Badge>
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <Select value={selectedCustomer} onValueChange={setSelectedCustomer}>
-                <SelectTrigger className="w-40">
-                  <SelectValue placeholder="고객사 선택" />
-                </SelectTrigger>
-                <SelectContent>
-                  {customers.map(customer => (
-                    <SelectItem key={customer.id} value={customer.id}>
-                      {customer.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+      <AppHeader
+        customers={customers}
+        projects={projects}
+        selectedCustomer={selectedCustomer}
+        selectedProject={selectedProject}
+        onCustomerChange={setSelectedCustomer}
+        onProjectChange={setSelectedProject}
+      />
 
-              <Select value={selectedProject} onValueChange={setSelectedProject}>
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="프로젝트 선택" />
-                </SelectTrigger>
-                <SelectContent>
-                  {projects
-                    .filter(p => p.customer === selectedCustomer)
-                    .map(project => (
-                      <SelectItem key={project.id} value={project.id}>
-                        {project.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-
-              <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
-                <Plus className="h-4 w-4 mr-2" />
-                신규 프로젝트
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {currentProject && (
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h1 className="text-2xl font-bold text-slate-900">{currentProject.name}</h1>
-                <p className="text-slate-600">
-                  {customers.find(c => c.id === selectedCustomer)?.name} | 
-                  <Badge variant="outline" className="ml-2">
-                    {currentProject.status === 'active' ? '진행중' : '완료'}
-                  </Badge>
-                </p>
-              </div>
-            </div>
-
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-5 bg-slate-100">
-                <TabsTrigger value="overview" className="flex items-center space-x-2">
-                  <BarChart3 className="h-4 w-4" />
-                  <span>개요</span>
-                </TabsTrigger>
-                
-                {currentProject.features.includes('application') && (
-                  <TabsTrigger value="application" className="flex items-center space-x-2">
-                    <FileText className="h-4 w-4" />
-                    <span>출원 관리</span>
-                  </TabsTrigger>
-                )}
-                
-                {currentProject.features.includes('valid-patent') && (
-                  <TabsTrigger value="valid-patent" className="flex items-center space-x-2">
-                    <Shield className="h-4 w-4" />
-                    <span>유효특허 분석</span>
-                  </TabsTrigger>
-                )}
-                
-                {currentProject.features.includes('portfolio') && (
-                  <TabsTrigger value="portfolio" className="flex items-center space-x-2">
-                    <TrendingUp className="h-4 w-4" />
-                    <span>포트폴리오</span>
-                  </TabsTrigger>
-                )}
-                
-                {currentProject.features.includes('framework') && (
-                  <TabsTrigger value="framework" className="flex items-center space-x-2">
-                    <Grid3X3 className="h-4 w-4" />
-                    <span>기술 프레임</span>
-                  </TabsTrigger>
-                )}
-              </TabsList>
-
-              <TabsContent value="overview" className="mt-6">
-                <ProjectOverview 
-                  projectId={selectedProject}
-                  customerId={selectedCustomer}
-                />
-              </TabsContent>
-
-              {currentProject.features.includes('application') && (
-                <TabsContent value="application" className="mt-6">
-                  <ApplicationProject 
-                    projectId={selectedProject}
-                    customerId={selectedCustomer}
-                  />
-                </TabsContent>
-              )}
-
-              {currentProject.features.includes('valid-patent') && (
-                <TabsContent value="valid-patent" className="mt-6">
-                  <ValidPatentAnalysis 
-                    projectId={selectedProject}
-                    customerId={selectedCustomer}
-                  />
-                </TabsContent>
-              )}
-
-              {currentProject.features.includes('portfolio') && (
-                <TabsContent value="portfolio" className="mt-6">
-                  <IPPortfolio 
-                    projectId={selectedProject}
-                    customerId={selectedCustomer}
-                  />
-                </TabsContent>
-              )}
-
-              {currentProject.features.includes('framework') && (
-                <TabsContent value="framework" className="mt-6">
-                  <TechFramework 
-                    projectId={selectedProject}
-                    customerId={selectedCustomer}
-                  />
-                </TabsContent>
-              )}
-            </Tabs>
-          </div>
+          <ProjectTabs
+            currentProject={currentProject}
+            customers={customers}
+            selectedCustomer={selectedCustomer}
+            selectedProject={selectedProject}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+          />
         )}
       </div>
     </div>
