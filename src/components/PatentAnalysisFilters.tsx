@@ -63,7 +63,7 @@ export const PatentAnalysisFilters: React.FC<PatentAnalysisFiltersProps> = ({
           </SelectContent>
         </Select>
 
-        <Select value={gradeFilter} onValue Change={onGradeFilterChange}>
+        <Select value={gradeFilter} onValueChange={onGradeFilterChange}>
           <SelectTrigger className="w-32">
             <SelectValue placeholder="등급" />
           </SelectTrigger>

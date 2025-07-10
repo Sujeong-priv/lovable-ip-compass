@@ -51,15 +51,15 @@ export const PatentAnalysisTable: React.FC<PatentAnalysisTableProps> = ({
     if (!grade) return <Badge variant="outline">미분류</Badge>;
     
     const gradeConfig = {
-      'S': { variant: 'destructive' as const, text: 'S급' },
+      'S': { variant: 'destructive' as const, text: 'S급', className: '' },
       'A': { variant: 'destructive' as const, text: 'A급', className: 'bg-orange-600' },
-      'B': { variant: 'secondary' as const, text: 'B급' },
-      'C': { variant: 'outline' as const, text: 'C급' },
+      'B': { variant: 'secondary' as const, text: 'B급', className: '' },
+      'C': { variant: 'outline' as const, text: 'C급', className: '' },
       'X': { variant: 'outline' as const, text: 'X급', className: 'text-gray-500' }
     };
 
     const config = gradeConfig[grade];
-    return <Badge variant={config.variant} className={config.className}>{config.text}</Badge>;
+    return <Badge variant={config.variant} className={config.className || undefined}>{config.text}</Badge>;
   };
 
   const getGradeIcon = (grade?: 'S' | 'A' | 'B' | 'C' | 'X') => {
@@ -112,9 +112,7 @@ export const PatentAnalysisTable: React.FC<PatentAnalysisTableProps> = ({
                 <Checkbox
                   checked={isAllSelected}
                   onCheckedChange={handleSelectAll}
-                  ref={(ref) => {
-                    if (ref) ref.indeterminate = isPartiallySelected;
-                  }}
+                  {...(isPartiallySelected && { 'data-indeterminate': true })}
                 />
               </TableHead>
               <TableHead>출원번호</TableHead>
