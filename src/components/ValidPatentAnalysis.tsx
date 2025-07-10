@@ -22,7 +22,6 @@ export interface Patent {
   category2?: string;
   applicationDate: string;
   expiryDate: string;
-  validityScore: number;
   grade?: 'S' | 'A' | 'B' | 'C' | 'X';
   gradeReason?: string;
 }
@@ -35,7 +34,7 @@ export const ValidPatentAnalysis: React.FC<ValidPatentAnalysisProps> = ({ projec
   const [gradeFilter, setGradeFilter] = useState('all');
   const [selectedPatents, setSelectedPatents] = useState<string[]>([]);
 
-  // Mock data with new status structure
+  // Mock data with updated structure (removed validityScore)
   const [patents, setPatents] = useState<Patent[]>([
     {
       id: 'pat-1',
@@ -47,7 +46,6 @@ export const ValidPatentAnalysis: React.FC<ValidPatentAnalysisProps> = ({ projec
       category2: '2A',
       applicationDate: '2023-01-15',
       expiryDate: '2043-01-15',
-      validityScore: 85,
       grade: 'S',
       gradeReason: '현재 실시 중인 보유기술과 대응도가 높아 비침해 논리 필요'
     },
@@ -61,7 +59,6 @@ export const ValidPatentAnalysis: React.FC<ValidPatentAnalysisProps> = ({ projec
       category2: '2A',
       applicationDate: '2022-05-20',
       expiryDate: '2042-05-20',
-      validityScore: 92,
       grade: 'A',
       gradeReason: '향후 출원예정 기술과 대응도가 높아 회피 설계 필요'
     },
@@ -75,7 +72,6 @@ export const ValidPatentAnalysis: React.FC<ValidPatentAnalysisProps> = ({ projec
       category2: '2B',
       applicationDate: '2023-01-20',
       expiryDate: '2043-01-20',
-      validityScore: 78,
       grade: 'B',
       gradeReason: '신규 특허 아이디어 발굴 시 참고 가능'
     },
@@ -89,7 +85,6 @@ export const ValidPatentAnalysis: React.FC<ValidPatentAnalysisProps> = ({ projec
       category2: '2C',
       applicationDate: '2021-03-10',
       expiryDate: '2041-03-10',
-      validityScore: 45,
       grade: 'X',
       gradeReason: '보유 기술과 관련도가 낮아 모니터링 불필요'
     }

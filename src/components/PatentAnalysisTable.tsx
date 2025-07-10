@@ -58,14 +58,10 @@ export const PatentAnalysisTable: React.FC<PatentAnalysisTableProps> = ({
   const getGradeIcon = (grade?: 'S' | 'A' | 'B' | 'C' | 'X') => {
     if (grade === 'S' || grade === 'A') {
       return <Shield className="h-4 w-4 text-red-600" />;
+    } else if (grade === 'B' || grade === 'C') {
+      return <Star className="h-4 w-4 text-blue-600" />;
     }
     return <Star className="h-4 w-4 text-gray-400" />;
-  };
-
-  const getValidityColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
   };
 
   const handleSelectAll = (checked: boolean) => {
@@ -105,7 +101,11 @@ export const PatentAnalysisTable: React.FC<PatentAnalysisTableProps> = ({
                 <Checkbox
                   checked={isAllSelected}
                   onCheckedChange={handleSelectAll}
-                  {...(isPartiallySelected && { 'data-indeterminate': true })}
+                  ref={(el) => {
+                    if (el) {
+                      el.indeterminate = isPartiallySelected;
+                    }
+                  }}
                 />
               </TableHead>
               <TableHead>출원번호</TableHead>
@@ -116,7 +116,6 @@ export const PatentAnalysisTable: React.FC<PatentAnalysisTableProps> = ({
               <TableHead>2축분류</TableHead>
               <TableHead>출원일</TableHead>
               <TableHead>만료일</TableHead>
-              <TableHead>유효성 점수</TableHead>
               <TableHead>액션</TableHead>
             </TableRow>
           </TableHeader>
@@ -151,11 +150,6 @@ export const PatentAnalysisTable: React.FC<PatentAnalysisTableProps> = ({
                 </TableCell>
                 <TableCell>{patent.applicationDate}</TableCell>
                 <TableCell>{patent.expiryDate}</TableCell>
-                <TableCell>
-                  <span className={`font-semibold ${getValidityColor(patent.validityScore)}`}>
-                    {patent.validityScore}점
-                  </span>
-                </TableCell>
                 <TableCell>
                   <Button variant="outline" size="sm">
                     <Eye className="h-4 w-4 mr-2" />

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Shield, CheckCircle, AlertTriangle, Clock } from 'lucide-react';
+import { Shield, CheckCircle, AlertTriangle, Star } from 'lucide-react';
 
 interface Patent {
   id: string;
@@ -17,6 +17,9 @@ interface PatentAnalysisStatsProps {
 export const PatentAnalysisStats: React.FC<PatentAnalysisStatsProps> = ({ patents }) => {
   const activeCount = patents.filter(p => p.status === 'active').length;
   const inactiveCount = patents.filter(p => p.status === 'inactive').length;
+  
+  // Exclude X grade patents from major patents
+  const majorPatentsCount = patents.filter(p => p.grade && p.grade !== 'X').length;
   const corePatentsCount = patents.filter(p => p.grade === 'S' || p.grade === 'A').length;
 
   return (
@@ -60,10 +63,11 @@ export const PatentAnalysisStats: React.FC<PatentAnalysisStatsProps> = ({ patent
       <Card>
         <CardContent className="p-4">
           <div className="flex items-center space-x-2">
-            <Clock className="h-5 w-5 text-orange-600" />
+            <Star className="h-5 w-5 text-orange-600" />
             <div>
-              <p className="text-sm font-medium">핵심특허</p>
-              <p className="text-2xl font-bold">{corePatentsCount}</p>
+              <p className="text-sm font-medium">주요특허</p>
+              <p className="text-2xl font-bold">{majorPatentsCount}</p>
+              <p className="text-xs text-gray-500">핵심: {corePatentsCount}건</p>
             </div>
           </div>
         </CardContent>
