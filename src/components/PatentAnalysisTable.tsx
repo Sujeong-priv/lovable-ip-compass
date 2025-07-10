@@ -101,11 +101,7 @@ export const PatentAnalysisTable: React.FC<PatentAnalysisTableProps> = ({
                 <Checkbox
                   checked={isAllSelected}
                   onCheckedChange={handleSelectAll}
-                  ref={(el) => {
-                    if (el) {
-                      el.indeterminate = isPartiallySelected;
-                    }
-                  }}
+                  className={isPartiallySelected ? "data-[state=indeterminate]:bg-primary" : ""}
                 />
               </TableHead>
               <TableHead>출원번호</TableHead>
