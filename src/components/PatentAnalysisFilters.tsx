@@ -12,6 +12,8 @@ interface PatentAnalysisFiltersProps {
   onStatusFilterChange: (status: string) => void;
   categoryFilter: string;
   onCategoryFilterChange: (category: string) => void;
+  gradeFilter: string;
+  onGradeFilterChange: (grade: string) => void;
 }
 
 export const PatentAnalysisFilters: React.FC<PatentAnalysisFiltersProps> = ({
@@ -20,7 +22,9 @@ export const PatentAnalysisFilters: React.FC<PatentAnalysisFiltersProps> = ({
   statusFilter,
   onStatusFilterChange,
   categoryFilter,
-  onCategoryFilterChange
+  onCategoryFilterChange,
+  gradeFilter,
+  onGradeFilterChange
 }) => {
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0 mb-6">
@@ -41,9 +45,9 @@ export const PatentAnalysisFilters: React.FC<PatentAnalysisFiltersProps> = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">전체</SelectItem>
-            <SelectItem value="valid">유효</SelectItem>
-            <SelectItem value="invalid">무효</SelectItem>
-            <SelectItem value="pending">심사중</SelectItem>
+            <SelectItem value="유효">유효</SelectItem>
+            <SelectItem value="무효">무효</SelectItem>
+            <SelectItem value="심사중">심사중</SelectItem>
           </SelectContent>
         </Select>
 
@@ -56,6 +60,20 @@ export const PatentAnalysisFilters: React.FC<PatentAnalysisFiltersProps> = ({
             <SelectItem value="1A">1A</SelectItem>
             <SelectItem value="1B">1B</SelectItem>
             <SelectItem value="1C">1C</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={gradeFilter} onValue Change={onGradeFilterChange}>
+          <SelectTrigger className="w-32">
+            <SelectValue placeholder="등급" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">전체</SelectItem>
+            <SelectItem value="S">S급</SelectItem>
+            <SelectItem value="A">A급</SelectItem>
+            <SelectItem value="B">B급</SelectItem>
+            <SelectItem value="C">C급</SelectItem>
+            <SelectItem value="X">X급</SelectItem>
           </SelectContent>
         </Select>
       </div>
