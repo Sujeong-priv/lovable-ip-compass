@@ -21,29 +21,22 @@ export const PatentAnalysisTable: React.FC<PatentAnalysisTableProps> = ({
   onPatentSelection,
   onGradeUpdate 
 }) => {
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case '유효':
-        return <Badge variant="secondary" className="bg-green-100 text-green-800">유효</Badge>;
-      case '무효':
-        return <Badge variant="secondary" className="bg-red-100 text-red-800">무효</Badge>;
-      case '심사중':
-        return <Badge variant="outline" className="text-orange-600 border-orange-300">심사중</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
+  const getStatusBadge = (status: 'active' | 'inactive', detailStatus: string) => {
+    if (status === 'active') {
+      return <Badge variant="secondary" className="bg-green-100 text-green-800">{detailStatus}</Badge>;
+    } else {
+      return <Badge variant="secondary" className="bg-red-100 text-red-800">{detailStatus}</Badge>;
     }
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case '유효':
-        return <CheckCircle className="h-4 w-4 text-green-600" />;
-      case '무효':
-        return <AlertTriangle className="h-4 w-4 text-red-600" />;
-      case '심사중':
+  const getStatusIcon = (status: 'active' | 'inactive', detailStatus: string) => {
+    if (status === 'active') {
+      if (detailStatus === '심사중') {
         return <Clock className="h-4 w-4 text-orange-600" />;
-      default:
-        return null;
+      }
+      return <CheckCircle className="h-4 w-4 text-green-600" />;
+    } else {
+      return <AlertTriangle className="h-4 w-4 text-red-600" />;
     }
   };
 
@@ -140,8 +133,8 @@ export const PatentAnalysisTable: React.FC<PatentAnalysisTableProps> = ({
                 <TableCell className="max-w-xs truncate">{patent.title}</TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-2">
-                    {getStatusIcon(patent.status)}
-                    {getStatusBadge(patent.status)}
+                    {getStatusIcon(patent.status, patent.detailStatus)}
+                    {getStatusBadge(patent.status, patent.detailStatus)}
                   </div>
                 </TableCell>
                 <TableCell>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { PatentAnalysisFilters } from '@/components/PatentAnalysisFilters';
 import { PatentAnalysisStats } from '@/components/PatentAnalysisStats';
@@ -17,7 +16,8 @@ export interface Patent {
   id: string;
   applicationNumber: string;
   title: string;
-  status: string;
+  status: 'active' | 'inactive';
+  detailStatus: '심사중' | '등록' | '거절' | '무효' | '취하' | '포기';
   category1: string;
   category2?: string;
   applicationDate: string;
@@ -30,17 +30,19 @@ export interface Patent {
 export const ValidPatentAnalysis: React.FC<ValidPatentAnalysisProps> = ({ projectId, customerId }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [detailStatusFilter, setDetailStatusFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [gradeFilter, setGradeFilter] = useState('all');
   const [selectedPatents, setSelectedPatents] = useState<string[]>([]);
 
-  // Mock data - 실제로는 Supabase에서 가져올 데이터
+  // Mock data with new status structure
   const [patents, setPatents] = useState<Patent[]>([
     {
       id: 'pat-1',
       applicationNumber: '10-2023-0001234',
       title: 'AI 기반 이미지 처리 방법 및 시스템',
-      status: '유효',
+      status: 'active',
+      detailStatus: '등록',
       category1: '1A',
       category2: '2A',
       applicationDate: '2023-01-15',
@@ -53,7 +55,8 @@ export const ValidPatentAnalysis: React.FC<ValidPatentAnalysisProps> = ({ projec
       id: 'pat-2',
       applicationNumber: '10-2022-0045678',
       title: '반도체 메모리 최적화 기술',
-      status: '유효',
+      status: 'active',
+      detailStatus: '등록',
       category1: '1B',
       category2: '2A',
       applicationDate: '2022-05-20',
@@ -66,7 +69,8 @@ export const ValidPatentAnalysis: React.FC<ValidPatentAnalysisProps> = ({ projec
       id: 'pat-3',
       applicationNumber: '10-2023-0002345',
       title: '5G 통신 프로토콜 개선 방법',
-      status: '심사중',
+      status: 'active',
+      detailStatus: '심사중',
       category1: '1C',
       category2: '2B',
       applicationDate: '2023-01-20',
@@ -79,7 +83,8 @@ export const ValidPatentAnalysis: React.FC<ValidPatentAnalysisProps> = ({ projec
       id: 'pat-4',
       applicationNumber: '10-2021-0003456',
       title: '머신러닝 기반 데이터 분석',
-      status: '무효',
+      status: 'inactive',
+      detailStatus: '거절',
       category1: '1A',
       category2: '2C',
       applicationDate: '2021-03-10',
@@ -96,10 +101,11 @@ export const ValidPatentAnalysis: React.FC<ValidPatentAnalysisProps> = ({ projec
       patent.applicationNumber.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesStatus = statusFilter === 'all' || patent.status === statusFilter;
+    const matchesDetailStatus = detailStatusFilter === 'all' || patent.detailStatus === detailStatusFilter;
     const matchesCategory = categoryFilter === 'all' || patent.category1 === categoryFilter;
     const matchesGrade = gradeFilter === 'all' || patent.grade === gradeFilter;
     
-    return matchesSearch && matchesStatus && matchesCategory && matchesGrade;
+    return matchesSearch && matchesStatus && matchesDetailStatus && matchesCategory && matchesGrade;
   });
 
   const handlePatentGradeUpdate = (patentId: string, grade: 'S' | 'A' | 'B' | 'C' | 'X', reason?: string) => {
@@ -129,6 +135,8 @@ export const ValidPatentAnalysis: React.FC<ValidPatentAnalysisProps> = ({ projec
             onSearchChange={setSearchTerm}
             statusFilter={statusFilter}
             onStatusFilterChange={setStatusFilter}
+            detailStatusFilter={detailStatusFilter}
+            onDetailStatusFilterChange={setDetailStatusFilter}
             categoryFilter={categoryFilter}
             onCategoryFilterChange={setCategoryFilter}
             gradeFilter={gradeFilter}

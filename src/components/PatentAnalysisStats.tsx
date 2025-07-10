@@ -5,7 +5,9 @@ import { Shield, CheckCircle, AlertTriangle, Clock } from 'lucide-react';
 
 interface Patent {
   id: string;
-  status: string;
+  status: 'active' | 'inactive';
+  detailStatus: string;
+  grade?: 'S' | 'A' | 'B' | 'C' | 'X';
 }
 
 interface PatentAnalysisStatsProps {
@@ -13,9 +15,9 @@ interface PatentAnalysisStatsProps {
 }
 
 export const PatentAnalysisStats: React.FC<PatentAnalysisStatsProps> = ({ patents }) => {
-  const validCount = patents.filter(p => p.status === '유효').length;
-  const invalidCount = patents.filter(p => p.status === '무효').length;
-  const pendingCount = patents.filter(p => p.status === '심사중').length;
+  const activeCount = patents.filter(p => p.status === 'active').length;
+  const inactiveCount = patents.filter(p => p.status === 'inactive').length;
+  const corePatentsCount = patents.filter(p => p.grade === 'S' || p.grade === 'A').length;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -36,8 +38,8 @@ export const PatentAnalysisStats: React.FC<PatentAnalysisStatsProps> = ({ patent
           <div className="flex items-center space-x-2">
             <CheckCircle className="h-5 w-5 text-green-600" />
             <div>
-              <p className="text-sm font-medium">유효</p>
-              <p className="text-2xl font-bold">{validCount}</p>
+              <p className="text-sm font-medium">Active</p>
+              <p className="text-2xl font-bold">{activeCount}</p>
             </div>
           </div>
         </CardContent>
@@ -48,8 +50,8 @@ export const PatentAnalysisStats: React.FC<PatentAnalysisStatsProps> = ({ patent
           <div className="flex items-center space-x-2">
             <AlertTriangle className="h-5 w-5 text-red-600" />
             <div>
-              <p className="text-sm font-medium">무효</p>
-              <p className="text-2xl font-bold">{invalidCount}</p>
+              <p className="text-sm font-medium">Inactive</p>
+              <p className="text-2xl font-bold">{inactiveCount}</p>
             </div>
           </div>
         </CardContent>
@@ -60,8 +62,8 @@ export const PatentAnalysisStats: React.FC<PatentAnalysisStatsProps> = ({ patent
           <div className="flex items-center space-x-2">
             <Clock className="h-5 w-5 text-orange-600" />
             <div>
-              <p className="text-sm font-medium">심사중</p>
-              <p className="text-2xl font-bold">{pendingCount}</p>
+              <p className="text-sm font-medium">핵심특허</p>
+              <p className="text-2xl font-bold">{corePatentsCount}</p>
             </div>
           </div>
         </CardContent>

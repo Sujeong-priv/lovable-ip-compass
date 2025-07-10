@@ -10,6 +10,8 @@ interface PatentAnalysisFiltersProps {
   onSearchChange: (term: string) => void;
   statusFilter: string;
   onStatusFilterChange: (status: string) => void;
+  detailStatusFilter: string;
+  onDetailStatusFilterChange: (detailStatus: string) => void;
   categoryFilter: string;
   onCategoryFilterChange: (category: string) => void;
   gradeFilter: string;
@@ -21,6 +23,8 @@ export const PatentAnalysisFilters: React.FC<PatentAnalysisFiltersProps> = ({
   onSearchChange,
   statusFilter,
   onStatusFilterChange,
+  detailStatusFilter,
+  onDetailStatusFilterChange,
   categoryFilter,
   onCategoryFilterChange,
   gradeFilter,
@@ -28,7 +32,7 @@ export const PatentAnalysisFilters: React.FC<PatentAnalysisFiltersProps> = ({
 }) => {
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0 mb-6">
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-4 flex-wrap gap-2">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
@@ -45,9 +49,23 @@ export const PatentAnalysisFilters: React.FC<PatentAnalysisFiltersProps> = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">전체</SelectItem>
-            <SelectItem value="유효">유효</SelectItem>
-            <SelectItem value="무효">무효</SelectItem>
+            <SelectItem value="active">Active</SelectItem>
+            <SelectItem value="inactive">Inactive</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={detailStatusFilter} onValueChange={onDetailStatusFilterChange}>
+          <SelectTrigger className="w-32">
+            <SelectValue placeholder="세부상태" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">전체</SelectItem>
             <SelectItem value="심사중">심사중</SelectItem>
+            <SelectItem value="등록">등록</SelectItem>
+            <SelectItem value="거절">거절</SelectItem>
+            <SelectItem value="무효">무효</SelectItem>
+            <SelectItem value="취하">취하</SelectItem>
+            <SelectItem value="포기">포기</SelectItem>
           </SelectContent>
         </Select>
 

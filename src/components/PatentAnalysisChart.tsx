@@ -6,7 +6,9 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 interface Patent {
   id: string;
   status: string;
+  detailStatus: string;
   category1: string;
+  grade?: 'S' | 'A' | 'B' | 'C' | 'X';
 }
 
 interface PatentAnalysisChartProps {
@@ -14,10 +16,29 @@ interface PatentAnalysisChartProps {
 }
 
 export const PatentAnalysisChart: React.FC<PatentAnalysisChartProps> = ({ patents }) => {
+  // Core patent ratio (S and A grades)
+  const corePatents = patents.filter(p => p.grade === 'S' || p.grade === 'A').length;
+  const totalPatents = patents.length;
+  const coreRatio = totalPatents > 0 ? (corePatents / totalPatents * 100).toFixed(1) : '0';
+  
+  const corePatentData = [
+    { 
+      name: '핵심특허', 
+      value: corePatents, 
+      color: '#EF4444',
+      percentage: coreRatio
+    },
+    { 
+      name: '일반특허', 
+      value: totalPatents - corePatents, 
+      color: '#94A3B8',
+      percentage: (100 - parseFloat(coreRatio)).toFixed(1)
+    }
+  ];
+
   const statusData = [
-    { name: '유효', value: patents.filter(p => p.status === '유효').length, color: '#10B981' },
-    { name: '무효', value: patents.filter(p => p.status === '무효').length, color: '#EF4444' },
-    { name: '심사중', value: patents.filter(p => p.status === '심사중').length, color: '#F59E0B' }
+    { name: 'Active', value: patents.filter(p => p.status === 'active').length, color: '#10B981' },
+    { name: 'Inactive', value: patents.filter(p => p.status === 'inactive').length, color: '#EF4444' }
   ];
 
   const categoryData = [
@@ -27,7 +48,32 @@ export const PatentAnalysisChart: React.FC<PatentAnalysisChartProps> = ({ patent
   ];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>핵심특허 비율</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={corePatentData}
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+                dataKey="value"
+                label={({ name, percentage }) => `${name}: ${percentage}%`}
+              >
+                {corePatentData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>특허 상태 분포</CardTitle>
