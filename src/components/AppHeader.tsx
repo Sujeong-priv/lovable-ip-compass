@@ -11,9 +11,7 @@ import {
   MenubarSeparator,
   MenubarTrigger,
 } from '@/components/ui/menubar';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Building2, Plus, Calendar, Users, FileText, Settings, HelpCircle } from 'lucide-react';
-import { MeetingHistory } from '@/components/MeetingHistory';
 
 interface Customer {
   id: string;
@@ -46,8 +44,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onCustomerChange,
   onProjectChange
 }) => {
-  const [isMeetingHistoryOpen, setIsMeetingHistoryOpen] = useState(false);
-
   return (
     <div className="bg-white border-b border-slate-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -76,25 +72,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                   <MenubarItem>
                     <FileText className="h-4 w-4 mr-2" />
                     보고서 생성
-                  </MenubarItem>
-                </MenubarContent>
-              </MenubarMenu>
-
-              <MenubarMenu>
-                <MenubarTrigger className="px-3 py-1">미팅</MenubarTrigger>
-                <MenubarContent>
-                  <MenubarItem onClick={() => setIsMeetingHistoryOpen(true)}>
-                    <Calendar className="h-4 w-4 mr-2" />
-                    미팅 히스토리
-                  </MenubarItem>
-                  <MenubarItem>
-                    <Plus className="h-4 w-4 mr-2" />
-                    새 미팅 등록
-                  </MenubarItem>
-                  <MenubarSeparator />
-                  <MenubarItem>
-                    <FileText className="h-4 w-4 mr-2" />
-                    미팅 자료 관리
                   </MenubarItem>
                 </MenubarContent>
               </MenubarMenu>
@@ -165,16 +142,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           </div>
         </div>
       </div>
-
-      {/* 미팅 히스토리 다이얼로그 */}
-      <Dialog open={isMeetingHistoryOpen} onOpenChange={setIsMeetingHistoryOpen}>
-        <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>미팅 히스토리</DialogTitle>
-          </DialogHeader>
-          <MeetingHistory />
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

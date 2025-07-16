@@ -7,13 +7,15 @@ import {
   Shield, 
   TrendingUp, 
   Grid3X3, 
-  BarChart3
+  BarChart3,
+  Calendar
 } from 'lucide-react';
 import { ApplicationProject } from '@/components/ApplicationProject';
 import { ValidPatentAnalysis } from '@/components/ValidPatentAnalysis';
 import { IPPortfolio } from '@/components/IPPortfolio';
 import { TechFramework } from '@/components/TechFramework';
 import { ProjectOverview } from '@/components/ProjectOverview';
+import { MeetingHistory } from '@/components/MeetingHistory';
 
 interface Customer {
   id: string;
@@ -46,6 +48,10 @@ export const ProjectTabs: React.FC<ProjectTabsProps> = ({
   activeTab,
   onTabChange
 }) => {
+  // Calculate the number of tabs for grid layout
+  const tabCount = 2 + currentProject.features.length; // overview + meeting + feature tabs
+  const gridCols = `grid-cols-${Math.min(tabCount, 6)}`;
+
   return (
     <div className="mb-6">
       <div className="flex items-center justify-between mb-4">
@@ -61,10 +67,15 @@ export const ProjectTabs: React.FC<ProjectTabsProps> = ({
       </div>
 
       <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
-        <TabsList className="grid w-full grid-cols-5 bg-slate-100">
+        <TabsList className={`grid w-full ${gridCols} bg-slate-100`}>
           <TabsTrigger value="overview" className="flex items-center space-x-2">
             <BarChart3 className="h-4 w-4" />
             <span>개요</span>
+          </TabsTrigger>
+
+          <TabsTrigger value="meeting" className="flex items-center space-x-2">
+            <Calendar className="h-4 w-4" />
+            <span>미팅</span>
           </TabsTrigger>
           
           {currentProject.features.includes('application') && (
@@ -101,6 +112,10 @@ export const ProjectTabs: React.FC<ProjectTabsProps> = ({
             projectId={selectedProject}
             customerId={selectedCustomer}
           />
+        </TabsContent>
+
+        <TabsContent value="meeting" className="mt-6">
+          <MeetingHistory />
         </TabsContent>
 
         {currentProject.features.includes('application') && (
