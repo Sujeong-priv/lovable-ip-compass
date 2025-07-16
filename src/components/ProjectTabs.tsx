@@ -48,10 +48,6 @@ export const ProjectTabs: React.FC<ProjectTabsProps> = ({
   activeTab,
   onTabChange
 }) => {
-  // Calculate the number of tabs for grid layout
-  const tabCount = 2 + currentProject.features.length; // overview + meeting + feature tabs
-  const gridCols = `grid-cols-${Math.min(tabCount, 6)}`;
-
   return (
     <div className="mb-6">
       <div className="flex items-center justify-between mb-4">
@@ -67,40 +63,40 @@ export const ProjectTabs: React.FC<ProjectTabsProps> = ({
       </div>
 
       <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
-        <TabsList className={`grid w-full ${gridCols} bg-slate-100`}>
-          <TabsTrigger value="overview" className="flex items-center space-x-2">
+        <TabsList className="inline-flex h-10 items-center justify-start w-auto bg-slate-100 p-1 rounded-md overflow-x-auto">
+          <TabsTrigger value="overview" className="flex items-center space-x-2 whitespace-nowrap">
             <BarChart3 className="h-4 w-4" />
             <span>개요</span>
           </TabsTrigger>
 
-          <TabsTrigger value="meeting" className="flex items-center space-x-2">
+          <TabsTrigger value="meeting" className="flex items-center space-x-2 whitespace-nowrap">
             <Calendar className="h-4 w-4" />
             <span>미팅</span>
           </TabsTrigger>
           
           {currentProject.features.includes('application') && (
-            <TabsTrigger value="application" className="flex items-center space-x-2">
+            <TabsTrigger value="application" className="flex items-center space-x-2 whitespace-nowrap">
               <FileText className="h-4 w-4" />
               <span>출원 관리</span>
             </TabsTrigger>
           )}
           
           {currentProject.features.includes('valid-patent') && (
-            <TabsTrigger value="valid-patent" className="flex items-center space-x-2">
+            <TabsTrigger value="valid-patent" className="flex items-center space-x-2 whitespace-nowrap">
               <Shield className="h-4 w-4" />
               <span>유효특허 분석</span>
             </TabsTrigger>
           )}
           
           {currentProject.features.includes('portfolio') && (
-            <TabsTrigger value="portfolio" className="flex items-center space-x-2">
+            <TabsTrigger value="portfolio" className="flex items-center space-x-2 whitespace-nowrap">
               <TrendingUp className="h-4 w-4" />
               <span>포트폴리오</span>
             </TabsTrigger>
           )}
           
           {currentProject.features.includes('framework') && (
-            <TabsTrigger value="framework" className="flex items-center space-x-2">
+            <TabsTrigger value="framework" className="flex items-center space-x-2 whitespace-nowrap">
               <Grid3X3 className="h-4 w-4" />
               <span>기술 프레임</span>
             </TabsTrigger>
