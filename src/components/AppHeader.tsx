@@ -1,9 +1,19 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Building2, Plus } from 'lucide-react';
+import { 
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarTrigger,
+} from '@/components/ui/menubar';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Building2, Plus, Calendar, Users, FileText, Settings, HelpCircle } from 'lucide-react';
+import { MeetingHistory } from '@/components/MeetingHistory';
 
 interface Customer {
   id: string;
@@ -36,6 +46,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onCustomerChange,
   onProjectChange
 }) => {
+  const [isMeetingHistoryOpen, setIsMeetingHistoryOpen] = useState(false);
+
   return (
     <div className="bg-white border-b border-slate-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -46,6 +58,75 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               <span className="text-xl font-bold text-slate-900">Lovable AI</span>
               <Badge variant="secondary" className="text-xs">IP Management</Badge>
             </div>
+
+            {/* 메뉴바 추가 */}
+            <Menubar className="border-none bg-transparent">
+              <MenubarMenu>
+                <MenubarTrigger className="px-3 py-1">프로젝트</MenubarTrigger>
+                <MenubarContent>
+                  <MenubarItem>
+                    <Plus className="h-4 w-4 mr-2" />
+                    새 프로젝트
+                  </MenubarItem>
+                  <MenubarItem>
+                    <Settings className="h-4 w-4 mr-2" />
+                    프로젝트 설정
+                  </MenubarItem>
+                  <MenubarSeparator />
+                  <MenubarItem>
+                    <FileText className="h-4 w-4 mr-2" />
+                    보고서 생성
+                  </MenubarItem>
+                </MenubarContent>
+              </MenubarMenu>
+
+              <MenubarMenu>
+                <MenubarTrigger className="px-3 py-1">미팅</MenubarTrigger>
+                <MenubarContent>
+                  <MenubarItem onClick={() => setIsMeetingHistoryOpen(true)}>
+                    <Calendar className="h-4 w-4 mr-2" />
+                    미팅 히스토리
+                  </MenubarItem>
+                  <MenubarItem>
+                    <Plus className="h-4 w-4 mr-2" />
+                    새 미팅 등록
+                  </MenubarItem>
+                  <MenubarSeparator />
+                  <MenubarItem>
+                    <FileText className="h-4 w-4 mr-2" />
+                    미팅 자료 관리
+                  </MenubarItem>
+                </MenubarContent>
+              </MenubarMenu>
+
+              <MenubarMenu>
+                <MenubarTrigger className="px-3 py-1">팀</MenubarTrigger>
+                <MenubarContent>
+                  <MenubarItem>
+                    <Users className="h-4 w-4 mr-2" />
+                    팀 멤버 관리
+                  </MenubarItem>
+                  <MenubarItem>
+                    <Plus className="h-4 w-4 mr-2" />
+                    멤버 초대
+                  </MenubarItem>
+                </MenubarContent>
+              </MenubarMenu>
+
+              <MenubarMenu>
+                <MenubarTrigger className="px-3 py-1">도움말</MenubarTrigger>
+                <MenubarContent>
+                  <MenubarItem>
+                    <HelpCircle className="h-4 w-4 mr-2" />
+                    사용 가이드
+                  </MenubarItem>
+                  <MenubarItem>
+                    <FileText className="h-4 w-4 mr-2" />
+                    API 문서
+                  </MenubarItem>
+                </MenubarContent>
+              </MenubarMenu>
+            </Menubar>
           </div>
           
           <div className="flex items-center space-x-4">
@@ -84,6 +165,16 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           </div>
         </div>
       </div>
+
+      {/* 미팅 히스토리 다이얼로그 */}
+      <Dialog open={isMeetingHistoryOpen} onOpenChange={setIsMeetingHistoryOpen}>
+        <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>미팅 히스토리</DialogTitle>
+          </DialogHeader>
+          <MeetingHistory />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
